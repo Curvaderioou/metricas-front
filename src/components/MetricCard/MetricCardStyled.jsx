@@ -1,5 +1,16 @@
 import styled from "styled-components";
 
+export const GuardaMetric = styled.article`
+  max-width: 200px;
+  width: 100%;
+  display: grid;
+  gap: 10px;
+  text-align: center;
+  h2 {
+    font-size: 1.25rem;
+  }
+`;
+
 export const MetricCardStyled = styled.article`
   height: 80px;
   max-width: 200px;

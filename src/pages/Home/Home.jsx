@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import { MetricCard } from "../../components/MetricCard/MetricCard";
-import { getAllMetrics } from "../../services/metricService";
+import { addActionService, getAllMetrics } from "../../services/metricService";
 import { HomeBody } from "./HomeStyled";
 
 export default function Home() {
@@ -20,9 +20,29 @@ export default function Home() {
       }
     }
     data = `${ano}-${mes + 1}-${diaMes - c}`;
-    console.log(data);
     const response = await getAllMetrics(data);
     setMetrics(response.data.results);
+  }
+
+  function getData() {
+    var data = new Date();
+    var diaSemana = data.getDay();
+    var diaMes = data.getDate();
+    var mes = data.getMonth();
+    var ano = data.getFullYear();
+    var c = 0;
+    if (diaSemana > 1) {
+      while (c < diaSemana - 1) {
+        c++;
+      }
+    }
+    data = `${ano}-${mes + 1}-${diaMes - c}`;
+    return data;
+  }
+
+  async function addAction(id) {
+    await addActionService(id, getData());
+    getMetrics();
   }
 
   useEffect(() => {
@@ -33,7 +53,12 @@ export default function Home() {
     <HomeBody>
       {metrics &&
         metrics.map((metric, index) => (
-          <MetricCard key={index} name={metric.name} />
+          <MetricCard
+            key={index}
+            name={metric.name}
+            actions={metric.monthWeek[0].week.actions}
+            add={() => addAction(metric.id)}
+          />
         ))}
     </HomeBody>
   );
